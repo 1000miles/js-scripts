@@ -11,7 +11,7 @@ const findAndSave = require('./findAndSave');
 const originalFiles = "original-files";
 const copiedFiles = "copied-files";
 
-const originalDir = path.join(__dirname + "../" + originalFiles + "/");
+const originalDir = path.join(__dirname + "/" + originalFiles + "/");
 const copiedDir = path.join(__dirname + "/" + copiedFiles + "/");
 const dirs = [originalDir, copiedDir];
 

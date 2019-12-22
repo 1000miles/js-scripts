@@ -19,7 +19,7 @@ const findAllAndSaveToFile = async () => {
 
   // List all files and folders in current dir and save standard output
   // to print to file instead of console
-  await exec('find . > ../prints/' + printFile, stderr => {
+  await exec('find . > ../prints' + printFile, stderr => {
     if (stderr) {
       console.log('STDERROR:', stderr);
       exec(stderr + '>' + printErrors);
