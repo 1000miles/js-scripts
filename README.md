@@ -23,7 +23,7 @@ $ node main.js
  - [x] File name contains emojis
 
   ## Bonus
-  
+
  - [ ] File name contains camel case, uppercase
  - [ ] File name is in different locale chars, japanese
  - [ ] File name is longer than 255 chars

@@ -17,12 +17,22 @@ const findAllAndSaveToFile = async () => {
     });
   };
 
-  // List all files and folders in current dir and save standard output
-  // to print to file instead of console
-  await exec('find . > ../prints' + printFile, stderr => {
+  // If stdout dir does not exist create one with prints as parent and redirect stdout to print file
+  // If stdout dir exists only redirect stdout to print file
+  await exec(`
+    [ -d ./prints/stdout ] || \n
+    mkdir -p ./prints/stdout && \n
+    find . > ./prints/stdout/` + printFile,
+    stderr => {
     if (stderr) {
-      console.log('STDERROR:', stderr);
-      exec(stderr + '>' + printErrors);
+      console.error('STDERROR:', stderr);
+      // If stderr dir does not exist create one with prints as parent dir and redirect stderr to error file
+      // If stderr folder exists only redirect stderr to error file
+      exec(`
+      [ -d ./prints/stderr ] || \n
+      mkdir -p ./prints/stderr && \n
+      ` + stderr + ` > ./prints/stderr/` + printErrors
+      )
     }
     // For better debugging
     process.on('unhandledRejection', err => {
