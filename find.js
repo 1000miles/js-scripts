@@ -6,7 +6,7 @@ const exec = util.promisify(require('child_process').exec);
 
 // Find all non-hidden files without process args
 const findAllOnly = async () => {
-  await exec('find .', (stdout, stderr) => {
+  await exec('find . && find . | wc -l', (stdout, stderr) => {
     if (stderr) return console.error(`exec error: ${stderr}`);
 
     data = stdout;
