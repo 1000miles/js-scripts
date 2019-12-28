@@ -1,80 +1,44 @@
 #! /usr/bin/env node
 
+// Node built-in modules
 const path = require('path');
-// This module extends the native fs with promise support
+
+// This module extends the native fs with promise support; most methods are async by default
 const fs = require('fs-extra');
+const shell = require('shelljs');
 
 // const find = require('./find');
 const findAndSave = require('./findAndSave');
 
-// SRC + DEST folders
-const originalFiles = "original-files";
-const copiedFiles = "copied-files";
+// SRC + DEST folders from original-files > copied-files
+const originalDir = path.join(__dirname + "/original-files");
+const copiedDir = path.join(__dirname + "/copied-files");
 
-const originalDir = path.join(__dirname + "/" + originalFiles + "/");
-const copiedDir = path.join(__dirname + "/" + copiedFiles + "/");
-const dirs = [originalDir, copiedDir];
-
-const ensureDirExists = async () => dirs.map(dir => {
-  // This method is equivalent to mkdirpSync => ensures recursive paths exist on create
-  if (!fs.existsSync(dir)) {
-    fs.ensureDirSync(dir);
-    return console.log(`Source directory ${dir} successfully created.`);
-  }
-});
-
-const readAndCopyDir = async () => {
-  fs.readdir(originalDir, async (err, files) => {
+const processReadAndCopy = (srcPath, destPath) => {
+  fs.readdir(srcPath, (err, items) => {
     if (err) throw err;
 
-    // Regex against unallowed chars in filename
-    let whiteSpace = /\s+/g;
-    let hiddenFile = /^\.+/g;
-    // Any char that is not alphanumeric, digit, whitespace, '-', '.' and more is not allowed
-    // With this regex negation we can catch symbols as well as emojis
-    let specialChars = /[^a-zA-Z\d\s-.]+/g;
-
-    // Iterate through each file in src dir
-    files.map(async (file) => {
-      let newFile;
-
-      if (file.match(whiteSpace)) {
-        newFile = file.replace(whiteSpace, "-");
-
-        console.log(`Whitespace not allowd. Sanitized filename: '${file}' => '${newFile}'`);
-      } else if (file.match(specialChars)) {
-        newFile = file.replace(specialChars, "");
-
-        console.log(`Special char not allowed. Sanitized filename: '${file}' => '${newFile}'`);
-      } else if (file.match(hiddenFile)) {
-        let removed = file;
-        console.log(`Removed hidden file from list to copy:`, removed);
-      } else {
-        newFile = file;
-      }
-
-      const syncProcess = async () => {
-        try {
-          const filterFiles = () => {
-            console.log(`CHECK for hidden files...`);
-
-            // Do sth.
-          }
-
-          // Copy files and folders from src to dest dir
-          console.log(`COPY process starting...`);
-
-          // TODO: filter options
-          fs.copySync(originalDir + file, copiedDir + newFile);
-        } catch (err) {
-          console.error(`Error while copying`, err);
-        }
-      }
-      await syncProcess();
-    })
-  })
+    copyFiles(srcPath, destPath, items);
+  });
 }
 
-findAndSave();
-ensureDirExists();
-readAndCopyDir();
+const copyFiles = (srcPath, destPath, items) => {
+  // Clean up before copy in case of cluttering files
+  if (destPath) shell.rm('-rf', './copied-files');
+
+  items.map(item => {
+    const fullSrcPath = srcPath + '/' + item;
+    const fullCopiedPath = destPath + '/' + item;
+
+    // fs.copy removes and replaces existing files in dest dir
+    fs.copy(fullSrcPath, fullCopiedPath, err => {
+      if (err) return console.error(err);
+
+      const srcFilename = path.parse(fullSrcPath).base;
+
+      console.log(`Successfully copied "${srcFilename}" to "${fullCopiedPath}."`);
+    });
+  });
+}
+
+processReadAndCopy(originalDir, copiedDir);
