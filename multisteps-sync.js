@@ -28,25 +28,6 @@ let setTimeoutFunc = (err) => {
 
 setTimeoutFunc();
 
-// Existing and empty dirs before start
-// const removeAndCreateDirs = () => {
-//   console.log(`============ PROCESS 1 =========`);
-
-//   shell.exec('rm -rf copied-files final-files', err => {
-//   if (err) throw err;
-
-//   console.log(`Removed ${copiedDir} and ${finalDir} dirs before start.`)
-//   })
-
-//   // Aquivalent to fs.ensureDir();
-//   shell.exec('mkdir -p copied-files final-files', err => {
-//   if (err) throw err;
-
-//   console.log(`Created ${copiedDir} and ${finalDir} dir before start.`)
-//   });
-// }
-
-// First run
 const processReadAndCopy = (srcPath, destPath) => {
   console.log(`============ PROCESS 1 =========`);
 
@@ -57,7 +38,6 @@ const processReadAndCopy = (srcPath, destPath) => {
   })
 }
 
-// Second run
 const processRenameAndCopy = (srcCopiedPath, finalDestPath) => {
   console.log(`============ PROCESS 2 =========`);
 
@@ -137,7 +117,7 @@ const readAndRenameItems = (srcCopiedPath, finalDestPath, items) => {
       }
 
       console.log(`============ PROCESS 8 RENAME FILES =========`);
-      // Sanitize and rename files and folders in copied-files dir before copy to final-files dir
+      // Rename files and folders in copied-files dir before copy to final-files dir
       fs.rename(srcCopiedPath + '/' + filename, srcCopiedPath + '/' + filename, (err) => {
         if (err) throw err;
 
