@@ -9,7 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chalk": "^3.0.0",
     "fs-extra": "^8.1.0",
-    "ncp": "^2.0.0"
+    "shelljs": "^0.8.3"
   }
 }
