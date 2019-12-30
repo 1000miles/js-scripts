@@ -22,10 +22,14 @@ const walkThroughDir = (dir) => {
         // Only push item to file list if type is a file
         listOfFiles.push(itemPath);
 
+        // Get list of all items:
+        listOfFiles.forEach(item => console.log(item))
+
         listOfFiles.map(file => {
           const stream = fs.createReadStream(file);
           let data;
 
+          // STREAM READ CONTENT
           stream
             // TODO: Fix encoding for non-utf8 files
             .setEncoding('utf8')
@@ -40,9 +44,12 @@ const walkThroughDir = (dir) => {
                 console.log(`Data Bytes: ${data.length}`);
 
                 console.log(`CHUNK:`, data);
-                
+
                 // Ensure data is consumed before writing
-                stream.pause();
+                setTimeout(() => {
+                  //console.log('Pause data flow after 1 sec.');
+                  stream.pause();
+                }, 1000);
 
                 setTimeout(() => {
                   //console.log('Resuming data flow after 2 sec.');
@@ -64,12 +71,11 @@ const walkThroughDir = (dir) => {
               console.error(`Error while reading data:`, err);
             });
         });
-
       } else if (item.isDirectory()) {
         // Recursion func w/ current path calls itself as long as item is a dir
         walkThroughDir(itemPath);
       }
-    })
+    });
   });
 }
 
