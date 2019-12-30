@@ -3,7 +3,6 @@
 // Node buil-in modules
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
-const path = require('path');
 
 const findAllAndSaveToFile = async () => {
   const ext = '.log'
@@ -22,7 +21,7 @@ const findAllAndSaveToFile = async () => {
   await exec(`
     [ -d ./prints/stdout ] || \n
     mkdir -p ./prints/stdout && \n
-    find . > ./prints/stdout/` + printFile,
+    find . 1> ./prints/stdout/` + printFile,
     stderr => {
     if (stderr) {
       console.error('STDERROR:', stderr);

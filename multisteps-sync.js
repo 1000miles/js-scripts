@@ -8,7 +8,7 @@ const shell = require('shelljs'); // Unix shell commands in JS
 const chalk = require('chalk'); // Colorizes terminal outputs
 
 // const find = require('./find');
-const findAndSave = require('./findAndSave');
+const findAndSave = require('./find-and-save-with-shell');
 
 // SRC + DEST folders from original-files > copied-files > final-files
 const originalDir = path.join(__dirname + "/original-files");

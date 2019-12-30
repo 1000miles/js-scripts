@@ -4,18 +4,25 @@
 
 ```shell
 $ npm install
-$ node main.js
-
-# OR:
-$ node multisteps-sync.js
+$ node <filename>.js
 ```
 
 ## Notes
 
-- `find.js` is a simple script to just run basic `find .` commands
-- `findAndSave.js` saves all content from the current directory into a separate file.
-- `main.js` pulls all together + lists, renames and syncs files and folders.
-- `multisteps-sync.js` is an extended version of `main.js`.
+## List all items of current dir
+- `find-with-shell.js` is a simple script to just run basic `find .` commands
+- `find-with-node-api.js` does the same as the shell command `find .` but with node api.
+
+## List all items of current dir and copy list to a separate file
+- `find-and-save-with-shell.js` saves all content from the current directory into a separate file each with shell command.
+
+## List all items of current dir and copy items of current dir to a destination dir
+- `sync.js` saves all content from the current directory into a separate dir with node api.
+
+## List all items, rename and copy to specified dirs (src > dest > final dest)
+- `multisteps-sync.js` is an extended version of `sync.js`.
+
+## List all items and stream content of items
 - `stream.js` streams the content of each file in a specified dir
 
 ## Use cases for unreadable files
