@@ -16,6 +16,7 @@ $ node multisteps-sync.js
 - `findAndSave.js` saves all content from the current directory into a separate file.
 - `main.js` pulls all together + lists, renames and syncs files and folders.
 - `multisteps-sync.js` is an extended version of `main.js`.
+- `stream.js` streams the content of each file in a specified dir
 
 ## Use cases for unreadable files
 
