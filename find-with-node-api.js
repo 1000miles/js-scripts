@@ -3,8 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const currentDir = path.join('.')
-const bufDir = Buffer.from(currentDir).toString('utf8');
+const currentDir = path.join('.');
 
 const walkThroughDir = (dir) => {
   // withFileTypes set to true gives us access to Dirent.name, Dirent.type (file or dir)
