@@ -17,16 +17,15 @@ const walkThroughDir = (dir) => {
       let itemName = item.name;
       let itemPath = path.join(dir + '/' + itemName);
 
-      if (item.isFile()) {
-        // Only push item to file list if type is a file
-        listOfFiles.push(itemPath);
-
-        // Get list of all items:
-        listOfFiles.forEach(item => console.log(item))
-      } else if (item.isDirectory()) {
+      if (item.isDirectory()) {
         // Recursion func w/ current path calls itself as long as item is a dir
         walkThroughDir(itemPath);
       }
+
+      listOfFiles.push(itemPath);
+
+      // Print all items: files, folders and subfolders
+      listOfFiles.forEach(item => console.log(item))
     });
   });
 }
