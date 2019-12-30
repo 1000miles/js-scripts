@@ -8,7 +8,7 @@ const fs = require('fs-extra');
 const shell = require('shelljs');
 
 // const find = require('./find');
-const findAndSave = require('./findAndSave');
+const findAndSave = require('./find-and-save-with-shell');
 
 // SRC + DEST folders from original-files > copied-files
 const originalDir = path.join(__dirname + "/original-files");
