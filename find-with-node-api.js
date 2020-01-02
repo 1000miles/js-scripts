@@ -10,8 +10,9 @@ var currentDir = '.';
  * Precede with './' for every filepath
  */
 
-// Depth-first binary tree in pre-order mode DLR (data, left, right) = Dirs (branches) go before files (learfs)
+// Depth-first binary tree in pre-order mode DLR (data, left, right) = Dirs (branches) go before files (leafs)
 const walkThroughDir = function (dir, done) {
+  // https://nodejs.org/docs/latest-v12.x/api/fs.html#fs_fs_stat_path_options_callback
   fs.readdir(dir, function (err, items) {
       if (err) return done(err);
 
@@ -36,6 +37,7 @@ const walkThroughDir = function (dir, done) {
           fs.stat(newItemPath, function (err, stats) {
             if (!item) return console.log(err);
 
+            // https://nodejs.org/docs/latest-v12.x/api/fs.html#fs_stats_isdirectory
             if (stats && stats.isDirectory()) {
                 // Trigger recursive function walkThroughDir() to call itself if directory
                 walkThroughDir(newItemPath, function (err) {
@@ -54,7 +56,7 @@ const walkThroughDir = function (dir, done) {
   });
 };
 
-// Call printFiles w/ callback
+// Call walkThroughDir() w/ callback
 walkThroughDir(currentDir, function(error) {
   if (error) throw error;
 });
