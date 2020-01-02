@@ -1,34 +1,60 @@
-#! /usr/bin/env node
-
+const path = require('path')
 const fs = require('fs');
-const path = require('path');
 
-const currentDir = path.join('.');
+var currentDir = '.';
 
-const walkThroughDir = (dir) => {
-  // withFileTypes set to true gives us access to Dirent.name, Dirent.type (file or dir)
-  fs.readdir(dir, { withFileTypes: true }, (err, items) => {
-    if (err) return console.error(err);
+/**
+ * Task: Loop through list of items and print out files
+ * If it is a directory call itself until the end of each dir (file) => Recursion
+ * If it is a file print out the current filepath
+ * Precede with './' for every filepath
+ */
 
-    let listOfFiles = [];
+// Depth-first binary tree in pre-order mode DLR (data, left, right) = Dirs (branches) go before files (learfs)
+const walkThroughDir = function (dir, done) {
+  fs.readdir(dir, function (err, items) {
+      if (err) return done(err);
 
-    // Iterate through all items of the current dir
-    items.map(item => {
-      let itemName = item.name;
-      let itemPath = path.join(dir + '/' + itemName);
+      let newItemPath;
+      let i = 0;
 
-      if (item.isDirectory()) {
-        // Recursion func w/ current path calls itself as long as item is a dir
-        walkThroughDir(itemPath);
-      }
+      // Self-executing function to walk through items list
+      (function walk () {
+          // Increment item out of items by 1
+          let item = items[i++];
 
-      listOfFiles.push(itemPath);
+          // If item does not exist return null
+          if (!item) return done(null);
 
-      // Print all items: files, folders and subfolders
-      listOfFiles.forEach(item => console.log(item))
-    });
+          let str = '.'
+          itemPath = path.join('/' + dir + '/' + item);
+
+          // Prepend '.' on every itemPath
+          newItemPath = str + itemPath;
+
+          // Get stats to retrieve filetype out of itemPath
+          fs.stat(newItemPath, function (err, stats) {
+            if (!item) return console.log(err);
+
+            if (stats && stats.isDirectory()) {
+                // Trigger recursive function walkThroughDir() to call itself if directory
+                walkThroughDir(newItemPath, function (err) {
+                  if (!item) return console.log(err);
+                  // Keep looping through items
+                  walk();
+                });
+            } else {
+              // Keep looping through items
+              walk();
+            }
+          });
+          // Print out result of each item
+          console.log(newItemPath);
+      })();
   });
-}
+};
 
-walkThroughDir(currentDir);
-
+// Call printFiles w/ callback
+walkThroughDir(currentDir, function(error) {
+  if (error) throw error;
+});
