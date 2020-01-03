@@ -22,10 +22,9 @@ const walkThroughDir = (dir, done) => {
     if (err) return done(err);
 
     let i = 0;
-    let statsList = [];
 
     // Self-executing function to walk through items list
-    (function walk () {
+    function walk() {
       // Increment item out of items by 1
       let item = items[i++];
 
@@ -48,45 +47,50 @@ const walkThroughDir = (dir, done) => {
         // Assign ctime props to stats for sorting by changed time (ctime)
         let itemStats = {
           fullpath: fullItemPath,
-          ctime: stats.ctime
+          ctime: stats.ctime,
+          isDirectory: false
         }
 
         newItemPath = itemStats.fullpath;
         newItemCtime = itemStats.ctime;
+        isDir = itemStats.isDirectory;
+
+        let statsList = [];
 
         if (stats && stats.isDirectory()) {
+          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: !isDir });
+
           // Trigger recursive function walkThroughDir() to call itself if directory
           walkThroughDir(newItemPath, function (err) {
             if (err) return console.log(err);
 
-            // Keep looping through items (recursion)
             walk();
           });
         } else {
-          // Keep looping through items (recursion)
+          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: isDir });
+
           walk();
         }
 
-        statsList.push({ fullpath: newItemPath, ctime: newItemCtime });
-
-        // return statsList;
-
-        // Sorting Option
-        // TODO: Sorting adopted to shell command `find .`
-        statsList
-          .sort((a, b) => {
-            return b.ctime - a.ctime // desc order
-          })
-          .map(file => {
-            console.log(file.fullpath)
-          })
-      })
         // Non-Sorting Option
         // statsList.map(file => {
         //   console.log(file.fullpath)
         // })
-    })();
-  });
+
+        // Sorting Option
+        // TODO: Sorting adopted to shell command `find .` to also sort dirs
+        statsList
+          .sort((a, b) => {
+            //console.log(`A:`, a); console.log(`B:`, b);
+            return b.ctime - a.ctime // Sort by last recent changed file in desc, then abc-order
+          })
+          .map(file => {
+            console.log(file.fullpath)
+          })
+      });
+    };
+    walk();
+  })
 };
 
 walkThroughDir(currentDir, (err) => {
