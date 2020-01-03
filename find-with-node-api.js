@@ -69,21 +69,22 @@ const walkThroughDir = (dir, done) => {
 
         statsList.push({ fullpath: newItemPath, ctime: newItemCtime });
 
-        return statsList;
+        // return statsList;
 
         // Sorting Option
-        // statsList
-        //   .sort((a, b) => {
-        //     return b.ctime - a.ctime // desc order
-        //   })
-        //   .map(file => {
-        //     console.log(file.fullpath)
-        //   })
+        // TODO: Sorting adopted to shell command `find .`
+        statsList
+          .sort((a, b) => {
+            return b.ctime - a.ctime // desc order
+          })
+          .map(file => {
+            console.log(file.fullpath)
+          })
       })
         // Non-Sorting Option
-        statsList.map(file => {
-          console.log(file.fullpath)
-        })
+        // statsList.map(file => {
+        //   console.log(file.fullpath)
+        // })
     })();
   });
 };
