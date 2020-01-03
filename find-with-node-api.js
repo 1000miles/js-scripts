@@ -39,6 +39,7 @@ const walkThroughDir = (dir, done) => {
 
       let newItemPath;
       let newItemCtime;
+      let isDir;
 
       // Get stats to retrieve filetype out of itemPath
       fs.stat(fullItemPath, (err, stats) => {
@@ -82,7 +83,7 @@ const walkThroughDir = (dir, done) => {
         statsList
           .sort((a, b) => {
             //console.log(`A:`, a); console.log(`B:`, b);
-            return b.ctime - a.ctime // Sort by last recent changed file in desc, then abc-order
+            return b.ctime - a.ctime && a.isDirectory && b.isDirectory // Sort by last recent changed file in desc, then abc-order
           })
           .map(file => {
             console.log(file.fullpath)
