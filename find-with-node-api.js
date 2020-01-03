@@ -23,7 +23,6 @@ const walkThroughDir = (dir, done) => {
 
     let i = 0;
 
-    // Self-executing function to walk through items list
     function walk() {
       // Increment item out of items by 1
       let item = items[i++];
@@ -41,15 +40,15 @@ const walkThroughDir = (dir, done) => {
       let newItemCtime;
       let isDir;
 
-      // Get stats to retrieve filetype out of itemPath
+      // Get stats to retrieve filetype out of fullItemPath
       fs.stat(fullItemPath, (err, stats) => {
         if (err) return console.log(err);
 
-        // Assign ctime props to stats for sorting by changed time (ctime)
+        // Prepare props ctime and isDirectory stats for sorting
         let itemStats = {
           fullpath: fullItemPath,
           ctime: stats.ctime,
-          isDirectory: false
+          isDirectory: true
         }
 
         newItemPath = itemStats.fullpath;
@@ -59,18 +58,18 @@ const walkThroughDir = (dir, done) => {
         let statsList = [];
 
         if (stats && stats.isDirectory()) {
-          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: !isDir });
+          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: isDir });
 
           // Trigger recursive function walkThroughDir() to call itself if directory
           walkThroughDir(newItemPath, function (err) {
             if (err) return console.log(err);
 
-            walk();
+            walk(); // Keeo looping
           });
         } else {
-          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: isDir });
+          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: !isDir });
 
-          walk();
+          walk(); // Keeo looping
         }
 
         // Non-Sorting Option
