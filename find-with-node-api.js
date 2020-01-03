@@ -39,6 +39,7 @@ const walkThroughDir = (dir, done) => {
 
       let newItemPath;
       let newItemCtime;
+      let isDir;
 
       // Get stats to retrieve filetype out of itemPath
       fs.stat(fullItemPath, (err, stats) => {
