@@ -48,43 +48,47 @@ const walkThroughDir = (dir, done) => {
         // Assign ctime props to stats for sorting by changed time (ctime)
         let itemStats = {
           fullpath: fullItemPath,
-          ctime: stats.ctime
+          ctime: stats.ctime,
+          isDirectory: true
         }
 
         newItemPath = itemStats.fullpath;
         newItemCtime = itemStats.ctime;
+        isDirStatus = itemStats.isDirectory;
 
         if (stats && stats.isDirectory()) {
           // Trigger recursive function walkThroughDir() to call itself if directory
           walkThroughDir(newItemPath, function (err) {
             if (err) return console.log(err);
 
+            statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: isDirStatus });
+
             // Keep looping through items (recursion)
             walk();
           });
         } else {
+          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: !isDirStatus });
+
           // Keep looping through items (recursion)
           walk();
         }
 
-        statsList.push({ fullpath: newItemPath, ctime: newItemCtime });
-
-        // return statsList;
-
-        // Sorting Option
-        // TODO: Sorting adopted to shell command `find .`
-        statsList
-          .sort((a, b) => {
-            return b.ctime - a.ctime // desc order
-          })
-          .map(file => {
-            console.log(file.fullpath)
-          })
-      })
         // Non-Sorting Option
         // statsList.map(file => {
         //   console.log(file.fullpath)
         // })
+
+        // Sorting Option
+        // TODO: Sorting adopted to shell command `find .` to also sort dirs
+        statsList
+          .sort((a, b) => {
+            //console.log(`A:`, a); console.log(`B:`, b);
+            return b.ctime - a.ctime // Sort by last recent changed file in desc, then abc-order
+          })
+          .map(file => {
+            console.log(file.fullpath)
+          })
+      });
     })();
   });
 };
