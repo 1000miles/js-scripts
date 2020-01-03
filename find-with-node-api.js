@@ -22,10 +22,9 @@ const walkThroughDir = (dir, done) => {
     if (err) return done(err);
 
     let i = 0;
-    let statsList = [];
 
     // Self-executing function to walk through items list
-    (function walk () {
+    function walk() {
       // Increment item out of items by 1
       let item = items[i++];
 
@@ -49,27 +48,27 @@ const walkThroughDir = (dir, done) => {
         let itemStats = {
           fullpath: fullItemPath,
           ctime: stats.ctime,
-          isDirectory: true
+          isDirectory: false
         }
 
         newItemPath = itemStats.fullpath;
         newItemCtime = itemStats.ctime;
-        isDirStatus = itemStats.isDirectory;
+        isDir = itemStats.isDirectory;
+
+        let statsList = [];
 
         if (stats && stats.isDirectory()) {
+          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: !isDir });
+
           // Trigger recursive function walkThroughDir() to call itself if directory
           walkThroughDir(newItemPath, function (err) {
             if (err) return console.log(err);
 
-            statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: isDirStatus });
-
-            // Keep looping through items (recursion)
             walk();
           });
         } else {
-          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: !isDirStatus });
+          statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: isDir });
 
-          // Keep looping through items (recursion)
           walk();
         }
 
@@ -89,8 +88,9 @@ const walkThroughDir = (dir, done) => {
             console.log(file.fullpath)
           })
       });
-    })();
-  });
+    };
+    walk();
+  })
 };
 
 walkThroughDir(currentDir, (err) => {
