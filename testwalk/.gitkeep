@@ -1,2 +1,4 @@
 # Ignore everything in this
 # This file is to check in empty dirs to test the walk output of js-scripts
+
+.
