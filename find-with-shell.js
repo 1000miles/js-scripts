@@ -4,8 +4,9 @@
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-// Find all non-hidden files without process args
 const findAllOnly = async () => {
+  // Find all files and folders in current dir and count lines of words of output
+  // Store the output of find . (stdout) in data var and print out data in terminal
   await exec('find . && find . | wc -l', (stdout, stderr) => {
     if (stderr) return console.error(`exec error: ${stderr}`);
 
@@ -14,6 +15,7 @@ const findAllOnly = async () => {
     console.log(`stdout:`, stdout);
   });
 
+  // Wait for data to be assembled before printout to terminal
   setTimeout(() => {
     console.log(`After 1 s: ${data}`);
   }, 1000)
