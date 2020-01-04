@@ -10,27 +10,23 @@ const findAllAndSaveToFile = async () => {
   const printErrors = 'print-errors' + ext;
 
   // If print file exists clear content with truncate
-  if (printFile) {
-    exec('truncate -s 0 ' + printFile, error => {
-      if (error) return console.error(`exec error: ${error}`);
-    });
-  };
+  // if (printFile) {
+  //   exec('truncate -s 0 ' + printFile, error => {
+  //     if (error) return console.error(`exec error: ${error}`);
+  //   });
+  // };
 
-  // If stdout dir does not exist create one with prints as parent and redirect stdout to print file
+  // If stdout dir does not exist create one with prints as parent and redirect stdout (1) to print file
   // If stdout dir exists only redirect stdout to print file
   await exec(`
-    [ -d ./prints/stdout ] || \n
-    mkdir -p ./prints/stdout && \n
-    find . 1> ./prints/stdout/` + printFile,
+    [ -d ./prints/stdout ] ||  mkdir -p ./prints/stdout &&  find . 1> ./prints/stdout/${printFile}`,
     stderr => {
     if (stderr) {
       console.error('STDERROR:', stderr);
-      // If stderr dir does not exist create one with prints as parent dir and redirect stderr to error file
+      // If stderr dir does not exist create one with prints as parent dir and redirect stderr (2) to error file
       // If stderr folder exists only redirect stderr to error file
       exec(`
-      [ -d ./prints/stderr ] || \n
-      mkdir -p ./prints/stderr && \n
-      ` + stderr + ` > ./prints/stderr/` + printErrors
+      [ -d ./prints/stderr ] || mkdir -p ./prints/stderr | find .  2> ./prints/stderr/${printErrors}`
       )
     }
     // For better debugging
