@@ -13,7 +13,7 @@
  */
 
  // Desired output for `find ./walk-files` in scripts/find/ DIR
- console.log(`
+ console.log(`DESIRED OUTPUT:
   ./walk-files
   ./walk-files/.gitkeep
   ./walk-files/a
@@ -130,3 +130,18 @@ const walkThroughDir = (dir, done) => {
 walkThroughDir(currentDir, (err) => {
   if (err) throw err;
 });
+
+/**
+ * CURRENT OUTPUT (2019, Jan 5):
+  ./walk-files/.gitkeep
+  ./walk-files/a
+  ./walk-files/b
+  ./walk-files/c
+  ./walk-files/d
+  ./walk-files/d/.gitkeep
+  ./walk-files/d/e
+  ./walk-files/d/e/.gitkeep
+  ./walk-files/f
+  ./walk-files/f/g
+  ./walk-files/f/g/i
+ **/
