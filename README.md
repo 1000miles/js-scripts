@@ -12,7 +12,6 @@ $ node <filename>.js
 ## List all items of a specified dir, e.g. current dir
 - `find-with-shell.js` is a simple script to just run basic `find .` commands
 - `find-with-node-api-v1.js` does the same as the shell command `find .` but with node api.
-- `find-with-node-api-v2.js` does the same as `find-with-node-api-v1.js` bit with different approach.
 
 ## List all items of specified dir and copy list to a separate file
 - `find-and-save-with-shell.js` saves all content from the current directory into a separate file each with shell command.

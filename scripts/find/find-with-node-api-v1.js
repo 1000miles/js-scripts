@@ -12,19 +12,27 @@
  * https://nodejs.org/docs/latest-v12.x/api/fs.html#fs_stats_isdirectory
  */
 
- // Desired output for `find testwalk`
- console.log(`
-  ./testwalk/a
-  ./testwalk/c
-  ./testwalk/d
-  ./testwalk/d/e
-  ./testwalk/b
+ // Desired output for `find ./walk-files` in scripts/find/ DIR
+ console.log(`DESIRED OUTPUT:
+  ./walk-files
+  ./walk-files/.gitkeep
+  ./walk-files/a
+  ./walk-files/f
+  ./walk-files/f/g
+  ./walk-files/f/g/i
+  ./walk-files/c
+  ./walk-files/d
+  ./walk-files/d/.gitkeep
+  ./walk-files/d/e
+  ./walk-files/d/e/.gitkeep
+  ./walk-files/b
  `);
 
+ // Node built-in modules
 const fs = require('fs');
 const path = require('path')
 
-const currentDir = path.join('testwalk');
+const currentDir = path.join('walk-files');
 
 // Depth-first binary tree traversal in pre-order mode DLR (data, left, right) = Dirs (branches) go before files (leafs)
 const walkThroughDir = (dir, done) => {
@@ -84,25 +92,25 @@ const walkThroughDir = (dir, done) => {
             if (err) return console.log(err);
 
             //console.log(`==== PROCESS 9: if directory, call walk()` - recursion)
-            walk(); // Keeo looping
+            walk(); // Keep looping
           });
         } else {
           //console.log(`==== PROCESS 7: if file push to statsList ====`)
           statsList.push({ fullpath: newItemPath, ctime: newItemCtime, isDirectory: !isDir });
 
           //console.log(`==== PROCESS 8: if file, call walk()` - recursion)
-          walk(); // Keeo looping
+          walk(); // Keep looping
         }
 
-        // console.log(`==== PROCESS: OUTPUT WITHOUT SORTING ====`)
+        // console.log(`==== PROCESS 9/10: OUTPUT WITHOUT SORTING ====`)
         // Non-Sorting Option
         statsList.map(file => {
           console.log(file.fullpath)
         });
 
         // Sorting Option
-        //console.log(`==== PROCESS: OUTPUT WITH SORTING ====`)
-        // TODO: Sorting adopted to shell command `find .` to also sort dirs
+        //console.log(`==== PROCESS 9/10: OUTPUT WITH SORTING ====`)
+        // TODO: Sorting adopted to shell command `find ./walk-files` to also sort dirs
         // statsList
         //   .sort((a, b) => {
         //    //console.log(`A:`, a); console.log(`B:`, b);
@@ -122,3 +130,18 @@ const walkThroughDir = (dir, done) => {
 walkThroughDir(currentDir, (err) => {
   if (err) throw err;
 });
+
+/**
+ * CURRENT OUTPUT (2019, Jan 5):
+  ./walk-files/.gitkeep
+  ./walk-files/a
+  ./walk-files/b
+  ./walk-files/c
+  ./walk-files/d
+  ./walk-files/d/.gitkeep
+  ./walk-files/d/e
+  ./walk-files/d/e/.gitkeep
+  ./walk-files/f
+  ./walk-files/f/g
+  ./walk-files/f/g/i
+ **/
